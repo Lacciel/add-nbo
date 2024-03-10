@@ -1,0 +1,1 @@
+/usr/bin/c++ "CMakeFiles/add-nbo.dir/add-nbo.cpp.o" -o /home/kali/Desktop/Lacciel/add-nbo/add-nbo 
