@@ -2,12 +2,24 @@
 #include<netinet/in.h>
 #include<stdint.h>
 int main(int argc, char** argv){
+	if(argc == 1){
+		printf("No Argument!");
+		return 1;
+	}
 	FILE* fp1 = fopen(argv[1], "r");
 	FILE* fp2 = fopen(argv[2], "r");
 	if(fp1 == NULL || fp2 == NULL){
-		printf("File open error");
+		printf("File open error!");
 		return 1;
 	}
+	fseek(fp1, 0, SEEK_END);
+	fseek(fp2, 0, SEEK_END);
+	if(ftell(fp1) < 4 || ftell(fp2) < 4){
+		printf("File size is too small!");
+		return 1;
+	}
+	fseek(fp1, 0, SEEK_SET);
+	fseek(fp2, 0, SEEK_SET);
 	uint32_t a1,a2;
 	fread(&a1, sizeof(uint32_t), 1, fp1);
 	a1 = ntohl(a1);
