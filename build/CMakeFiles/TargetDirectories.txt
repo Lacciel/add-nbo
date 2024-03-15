@@ -1,3 +1,0 @@
-/home/kali/Desktop/Lacciel/add-nbo/build/CMakeFiles/add-nbo.dir
-/home/kali/Desktop/Lacciel/add-nbo/build/CMakeFiles/edit_cache.dir
-/home/kali/Desktop/Lacciel/add-nbo/build/CMakeFiles/rebuild_cache.dir
