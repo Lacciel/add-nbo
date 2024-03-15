@@ -1,31 +1,36 @@
 #include<stdio.h>
 #include<netinet/in.h>
 #include<stdint.h>
+#include<stdlib.h>
+#include<errno.h>
+#include<string.h>
+
+void usage(){
+	printf("syntax : add-nbo <file1> <file2>\n");
+	printf("sample : add-nbo a.bin b.bin\n");
+}
+
 int main(int argc, char** argv){
-	if(argc == 1){
-		printf("No Argument!");
-		return 1;
+	if(argc != 3){
+		usage();
+		exit(EXIT_FAILURE);
 	}
-	FILE* fp1 = fopen(argv[1], "r");
-	FILE* fp2 = fopen(argv[2], "r");
-	if(fp1 == NULL || fp2 == NULL){
-		printf("File open error!");
-		return 1;
+	FILE* fp[2];
+	uint32_t bin[2];
+	for(int i=0; i<2; i++){
+		fp[i] = fopen(argv[i+1], "r");
+		if(fp[i] == NULL){
+			printf("%d Argument  %s\n",i+1,strerror(errno));
+			exit(EXIT_FAILURE);
+		}
+		fread(&bin[i],1,sizeof(uint32_t),fp[i]);
+		if(sizeof(bin[i])<4){
+			printf("%d File Size is too small", i+1);
+			exit(EXIT_FAILURE);
+		}
+		bin[i] = ntohl(bin[i]);
 	}
-	fseek(fp1, 0, SEEK_END);
-	fseek(fp2, 0, SEEK_END);
-	if(ftell(fp1) < 4 || ftell(fp2) < 4){
-		printf("File size is too small!");
-		return 1;
-	}
-	fseek(fp1, 0, SEEK_SET);
-	fseek(fp2, 0, SEEK_SET);
-	uint32_t a1,a2;
-	fread(&a1, sizeof(uint32_t), 1, fp1);
-	a1 = ntohl(a1);
-	fread(&a2, sizeof(uint32_t), 1, fp2);
-	a2 = ntohl(a2);
-	printf("%d(0x%x) + %d(0x%x) = %d(0x%x)", a1,a1,a2,a2,a1+a2,a1+a2);
-	fclose(fp1);
-	fclose(fp2);
+	printf("%d(0x%x) + %d(0x%x) = %d(0x%x)", bin[0],bin[0],bin[1],bin[1],bin[0]+bin[1],bin[0]+bin[1]);
+	fclose(fp[0]);
+	fclose(fp[1]);
 }
